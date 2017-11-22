@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste de livre</title>
+        <style>
+            body{
+                font-family: Arial, Helvetica, sans-serif;
+
+            }
+            input{
+                margin-bottom: 5px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Ma liste de livre</h1>
+        <ul>
+            <li>
+                %books%
+            </li>
+        </ul>
+        <form id="book-form">
+            <h2>Entrez le nom d'un livre et son auteur</h2>
+            <div>
+                <label for="name"></label>
+                <input type="text" name="name" id="name" placeholder="Nom du livre">
+            </div>
+            <div>
+                <label for="author"></label>
+                <input type="text" name="author" id="author" placeholder="Nom de l'auteur">
+            </div>
+            <input type="submit" value="Sauver le livre" id="save">
+        </form>
+        <script>
+        document.getElementById('book-form').addEventListener('submit', function (event) {
+            event.preventDefault();
+            var form = new FormData(document.getElementById('book-form'));
+            var object = {};
+            form.forEach(function (value, key) {
+                object[key] = value;
+            });
+            var json = JSON.stringify(object);
+            fetch("/api/books", {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                method: "POST",
+                body: json
+            }).then((resp)=>{
+                resp.json().then(data=>{
+                    let str = JSON.parse(data).reduce((prev,next)=>{
+                        return prev+`<li><strong>${next.name}</strong> de ${item.author}</li>`
+                        },'');
+                        let liste =document.getElementById('list');
+                        console.log(liste)
+                        liste.innerHTML=str
+                    })
+                })
+            })
+        </script>
+    </body>
+    </html>
